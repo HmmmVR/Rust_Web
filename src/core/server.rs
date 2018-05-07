@@ -13,19 +13,19 @@ impl <'a> WebServer <'a> {
     pub fn new() -> WebServer<'a> {
         WebServer {
             port: 1337,
-            headers: vec![]
+            headers: vec![ "Content-Type: application/json", "X-Powered-by: MEEE" ]
         }
     }
 
     // Match a response code with the full response
-    fn get_response_code(code: i32) -> &'a str {
+    fn get_response_code(&self, code: i32) -> String {
         match code {
-            200 => "200 OK",
-            400 => "400 Bad Request",
-            403 => "403 Forbidden",
-            404 => "404 Not Found",
-            500 => "500 Internal Server Error",
-            _ => ""
+            200 => String::from("200 OK"),
+            400 => String::from("400 Bad Request"),
+            403 => String::from("403 Forbidden"),
+            404 => String::from("404 Not Found"),
+            500 => String::from("500 Internal Server Error"),
+            _ => String::from("")
         }
     }
 
@@ -41,10 +41,27 @@ impl <'a> WebServer <'a> {
         }
     }
 
+    fn get_headers(&self) -> String {
+        let mut result: String = "".to_owned();
+
+        for header in &self.headers {
+            result += &format!("{}{}", header, ";\r\n");
+        }
+
+        result
+    }
+
     // Write stream
     fn handle_write(&self, mut stream: TcpStream) {
-        let response = b"HTTP/1.1 200 OK\r\nContent-Type: text/html;charset=UTF-8\r\n\r\n<html><body>Hello world</body></html>\r\n";
-        match stream.write(response) {
+        let response = format!(
+            "{}{}{}{}",
+            "HTTP/1.1 ",
+            self.get_response_code(200) + "\r\n",
+            self.get_headers(),
+            "\r\n{\"hello\": \"world\"}\r\n"
+        );
+
+        match stream.write(response.as_bytes()) {
             Ok(_) => println!("Response sent"),
             Err(e) => println!("Failed sending response: {}", e),
         }
