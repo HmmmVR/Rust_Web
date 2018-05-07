@@ -1,0 +1,6 @@
+[package]
+name = "Rust_Web"
+version = "0.1.0"
+authors = ["kobus <kobus.haarhuis@hotmail.com>"]
+
+[dependencies]
