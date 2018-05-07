@@ -1,3 +1,14 @@
+pub mod core;
+pub mod app;
+
+use core::router::Router;
+use app::site::Site;
+
 fn main() {
-    println!("Hello, world!");
+    let s = Site {
+        msg: String::from("Hello world!")
+    };
+
+    s.log();
 }
+
