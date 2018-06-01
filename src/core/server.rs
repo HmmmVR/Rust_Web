@@ -1,19 +1,28 @@
 use std::net::{ TcpListener, TcpStream };
 use std::io::{ Read, Write };
+use core::router::Router;
+
+pub struct Request {
+
+}
+
+pub struct Response {
+
+}
 
 pub struct WebServer <'a> {
-    // Serve port
     port: u32,
-    // Vector of headers
-    headers: Vec<&'a str>
+    headers: Vec<&'a str>,
+	router: &<'a> Router
 }
 
 impl <'a> WebServer <'a> {
     // New Server
-    pub fn new() -> WebServer<'a> {
+    pub fn new(router: &Router) -> WebServer<'a> {
         WebServer {
             port: 1337,
-            headers: vec![ "Content-Type: application/json", "X-Powered-by: MEEE" ]
+            headers: vec![ "Content-Type: application/json", "X-Powered-by: MEEE" ],
+			router: &<'a> router
         }
     }
 
@@ -53,6 +62,7 @@ impl <'a> WebServer <'a> {
 
     // Write stream
     fn handle_write(&self, mut stream: TcpStream) {
+
         let response = format!(
             "{}{}{}{}",
             "HTTP/1.1 ",
